@@ -16,26 +16,37 @@
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     height: 60px;
-    padding-top: 10px;
-    padding-right: 50px;
-    padding-bottom: 10px;
-    padding-left: 50px;
+    padding: 10px 50px;
     background: #f4f4f4;
-   
   }
 
   .gift-banner__logo {
     justify-self: start;
     font-size: 20px;
-    
-    font-weight:500;
-    
+    font-weight: 500;
+  }
+
+  /* Hamburger icon: hidden on desktop, shown on mobile */
+  .gift-banner__burger {
+    display: none;
+  }
+
+  .gift-banner__burger i {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #000;
+  }
+
+  /* Mobile-only text variants: hidden on desktop */
+  .gift-banner__mobile-only {
+    display: none;
   }
 
   .gift-banner__tagline {
     justify-self: center;
     font-size: 16px;
-    letter-spacing:0;
+    letter-spacing: 0;
     text-align: center;
     white-space: nowrap;
     font-weight: 400;
@@ -56,7 +67,6 @@
     text-transform: uppercase;
     text-decoration: none;
     white-space: nowrap;
-   
   }
 
   .gift-banner__choose:hover {
@@ -70,7 +80,7 @@
     display: flex;
     align-items: flex-end;
     min-height: 0;
-    width:100%;
+    width: 100%;
     height: 780px;
     padding: 0 4.45%;
     box-sizing: border-box;
@@ -129,13 +139,14 @@
     font-weight: 400;
     text-transform: uppercase;
     text-decoration: none;
-    letter-spacing:0;
+    letter-spacing: 0;
   }
 
   .gift-banner__shop:hover {
     background: #292929;
   }
-    /* BUTTON ANIMATION: smooth colour change, arrow slides right on hover */
+
+  /* BUTTON ANIMATION: smooth colour change, arrow slides right on hover */
   .gift-banner__choose,
   .gift-banner__shop {
     transition: background-color 0.3s ease;
@@ -151,121 +162,125 @@
     transform: translateX(6px);
   }
 
-
-
-  /* BOTTOM STRIP  (the strip that contains sustainblr, ethically.....)*/
+  /* BOTTOM STRIP (sustainable, ethically made...) */
 
   .gift-banner__strip {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 34px;
-    padding: 10px 50px 10px 50px;
+    padding: 10px 50px;
     box-sizing: border-box;
     background: #f4f4f4;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.4;
-    letter-spacing:0;
+    letter-spacing: 0;
     text-align: center;
     text-transform: uppercase;
   }
-  
 
-  /* TABLET */
+  /* MOBILE */
 
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 600px) {
+    /* Header: burger left, logo centered, no tagline and no "Choose gift" button */
     .gift-banner__topbar {
-      padding: 0 24px;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
+      grid-template-columns: 1fr auto 1fr;
+      height: 65px;
+      padding: 0 16px;
+    }
+
+    .gift-banner__burger {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      justify-self: start;
+    }
+
+    .gift-banner__logo {
+      justify-self: center;
+      font-size: 25px;
+      font-weight:bold;
+    }
+
+    .gift-banner__choose {
+      display: none;
     }
 
     .gift-banner__tagline {
       display: none;
     }
 
+    /* Swap desktop text for the shorter mobile text */
+    .gift-banner__desktop-only {
+      display: none;
+    }
+
+    .gift-banner__mobile-only {
+      display: inline;
+    }
+
+    /* Hero on mobile: text on top, the mobile illustration below it */
     .gift-banner__hero {
-      height: clamp(520px, 72vw, 650px);
-      padding: 0 32px;
-      background-position: center center;
+      --mobile-image-height: 70.4vw; 
+      height: auto;
+      padding: 32px 20px var(--mobile-image-height);
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background-image: url('{{ "banner-mobile.png" | asset_url }}');
+      background-position: center bottom;
+      background-size: 100% auto;
     }
 
-    .gift-banner__content {
-      max-width: 460px;
-      padding-bottom: 36px;
-    }
-
-    .gift-banner__heading {
-      font-size: clamp(44px, 6vw, 58px);
-      margin-bottom: 32px;
-    }
-
-    .gift-banner__description {
-      font-size: 17px;
-      margin-bottom: 32px;
-    }
-  }
-
-  /* MOBILE */
-
-  @media screen and (max-width: 600px) {
-    .gift-banner__topbar {
-      height: 58px;
-      padding: 0 16px;
-      gap: 12px;
-    }
-
-    .gift-banner__logo {
-      font-size: 16px;
-    }
-
-    .gift-banner__choose {
-      width: auto;
-      min-width: 138px;
-      height: 38px;
-      padding: 0 12px;
-      gap: 8px;
-      font-size: 11px;
-    }
-
-    .gift-banner__hero {
-      height: 660px;
-      padding: 0 20px;
-      align-items: flex-end;
-      background-position: center center;
-      background-size: auto 100%;
-    }
-
-    .gift-banner__content {
+        .gift-banner__content {
+      position: static; /* lets the "Shop now" button position itself against the hero instead */
       max-width: 100%;
-      padding-bottom: 32px;
+      padding-bottom: 0;
     }
 
     .gift-banner__heading {
-      font-size: clamp(38px, 10vw, 48px);
-      line-height: 1.05;
-      letter-spacing: -1px;
-      white-space: normal;
-      margin-bottom: 24px;
+      font-size: 30px;
+      font-weight:500;
+      line-height: 100%;
+      letter-spacing: 0;
+      margin: 0 0 16px;
+      font-family: 'Jost';
     }
 
     .gift-banner__description {
-      max-width: 360px;
-      font-size: 15px;
-      line-height: 1.5;
-      margin-bottom: 28px;
+      max-width: 340px;
+      margin: 0 auto;
+      font-size: 16px;
+      font-weight:400;
+      line-height:130%;
+      letter-spacing:0px;
+      font-family: 'Jost';
     }
 
-    .gift-banner__shop {
-      width: 190px;
-      height: 48px;
-      font-size: 13px;
+    /* "Shop now" floats over the lower part of the illustration */
+         .gift-banner__shop {
+      position: absolute;
+      left: 50%;
+      bottom: calc(var(--mobile-image-height) * 0.125);
+      transform: translateX(-50%);
+      width: 193px;
+      height: 45px;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 20.48px;
+      letter-spacing: 0;
+      justify-content: center;
+      gap: 25px;
+      font-family: 'Jost';
     }
 
-    .gift-banner__strip {
-      font-size: 10px;
+      .gift-banner__strip {
+      font-family: 'Jost';
+      font-size: 14px;
+      font-weight: 400;
       padding: 9px 12px;
+      letter-spacing: 0;
     }
   }
 
@@ -279,7 +294,11 @@
 
 <section class="gift-banner">
 
+  {%- comment -%} Top bar: burger (mobile only), logo, tagline, "Choose gift" button {%- endcomment -%}
   <div class="gift-banner__topbar">
+    {%- comment -%} Hamburger icon, only visible on mobile {%- endcomment -%}
+    <span class="gift-banner__burger" aria-hidden="true"><i></i><i></i><i></i></span>
+
     <span class="gift-banner__logo">
       {{ section.settings.logo_text }}
     </span>
@@ -299,6 +318,7 @@
     </a>
   </div>
 
+  {%- comment -%} Hero: background illustration with heading, text and "Shop now" button {%- endcomment -%}
   <div class="gift-banner__hero">
     <div class="gift-banner__content">
 
@@ -307,7 +327,8 @@
       </h1>
 
       <p class="gift-banner__description">
-        {{ section.settings.description }}
+        <span class="gift-banner__desktop-only">{{ section.settings.description }}</span>
+        <span class="gift-banner__mobile-only">{{ section.settings.description_mobile }}</span>
       </p>
 
       <a class="gift-banner__shop" href="{{ section.settings.shop_link }}">
@@ -323,8 +344,10 @@
     </div>
   </div>
 
+  {%- comment -%} Bottom strip (different text on mobile) {%- endcomment -%}
   <div class="gift-banner__strip">
-    {{ section.settings.strip_text }}
+    <span class="gift-banner__desktop-only">{{ section.settings.strip_text }}</span>
+    <span class="gift-banner__mobile-only">{{ section.settings.strip_text_mobile }}</span>
   </div>
 
 </section>
@@ -370,6 +393,12 @@
     },
     {
       "type": "text",
+      "id": "description_mobile",
+      "label": "Description (mobile)",
+      "default": "Discover Joy: Your Ultimate Holiday Gift <br> Destination."
+    },
+    {
+      "type": "text",
       "id": "shop_label",
       "label": "Shop now label",
       "default": "Shop now"
@@ -384,6 +413,12 @@
       "id": "strip_text",
       "label": "Bottom strip text",
       "default": "Sustainable, ethically made clothes in sizes XXS to 6XL"
+    },
+    {
+      "type": "text",
+      "id": "strip_text_mobile",
+      "label": "Bottom strip text (mobile)",
+      "default": "Sustainable, ethically made activewear"
     }
   ],
   "presets": [
