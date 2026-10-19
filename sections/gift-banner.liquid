@@ -1,0 +1,128 @@
+{{ 'https://fonts.googleapis.com/css2?family=Jost:wght@400;500&display=swap' | stylesheet_tag }}
+
+{% style %}
+  .gift-banner { font-family: 'Jost', sans-serif; color: #000; }
+
+  .gift-banner__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 40px;
+    background: #f4f4f4;
+  }
+
+  .gift-banner__logo { font-size: 20px; font-weight: 500; }
+  .gift-banner__tagline { font-size: 16px; line-height: 13.42px; }
+
+  .gift-banner__choose {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 207px;
+    height: 44px;
+    background: #fff544;
+    color: #000;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .gift-banner__hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    height: 780px;
+    padding: 0 67px;
+    background: #fff url('{{ "banner-desktop.png" | asset_url }}') center / cover no-repeat;
+  }
+
+    .gift-banner__content {
+    max-width: 483px;
+    padding-bottom: 80px;
+  }
+
+  .gift-banner__heading {
+    margin: 0 0 24px;
+    font-family: 'Jost', sans-serif;
+    font-size: 70px;
+    font-weight: 500;
+    line-height: 100%;
+    color: #000;
+  }
+
+  .gift-banner__description {
+    margin: 0 0 40px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 140%;
+    color: #000;
+  }
+
+  .gift-banner__shop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 220px;
+    height: 50px;
+    background: #000;
+    color: #fff;
+    font-size: 16px;
+    line-height: 20.48px;
+    text-transform: uppercase;
+    text-decoration: none;
+    gap: 12px;
+  }
+    .gift-banner__strip {
+    padding: 8px 0;
+    background: #f4f4f4;
+    font-size: 12px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+    .shopify-section-group-header-group,
+  .shopify-section-group-footer-group {
+    display: none;
+  }
+{% endstyle %}
+
+<section class="gift-banner">
+  <div class="gift-banner__topbar">
+    <span class="gift-banner__logo">{{ section.settings.logo_text }}</span>
+    <span class="gift-banner__tagline">{{ section.settings.tagline }}</span>
+    <a class="gift-banner__choose" href="{{ section.settings.choose_link }}">
+      {{ section.settings.choose_label }}
+    </a>
+  </div>
+    <div class="gift-banner__hero">
+    <div class="gift-banner__content">
+      <h1 class="gift-banner__heading">{{ section.settings.heading }}</h1>
+      <p class="gift-banner__description">{{ section.settings.description }}</p>
+          <a class="gift-banner__shop" href="{{ section.settings.shop_link }}">
+        <span>{{ section.settings.shop_label }}</span>
+        <svg width="24" height="10" viewBox="0 0 24 10" fill="none" aria-hidden="true">
+          <path d="M0 5h22M18 1l4 4-4 4" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+    <div class="gift-banner__strip">{{ section.settings.strip_text }}</div>
+</section>
+
+{% schema %}
+{
+  "name": "Gift Banner",
+  "settings": [
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "TISSO VISON" },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Find the ideal gift for your loved ones." },
+    { "type": "text", "id": "choose_label", "label": "Choose gift label", "default": "Choose gift" },
+    { "type": "url", "id": "choose_link", "label": "Choose gift link" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Gift Guide" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
+    { "type": "text", "id": "shop_label", "label": "Shop now label", "default": "Shop now" },
+    { "type": "url", "id": "shop_link", "label": "Shop now link" },
+        { "type": "text", "id": "strip_text", "label": "Bottom strip text", "default": "Sustainable, ethically made clothes in sizes XXS to 6XL" }
+  ],
+  "presets": [{ "name": "Gift Banner" }]
+}
+{% endschema %}
