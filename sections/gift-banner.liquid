@@ -73,9 +73,10 @@
   white-space: nowrap;
 }
 
-/* When I hover over the button it changes color to a deeper yellow showing interaction */
+/* On hover the yellow button turns black with white text */
 .choose_gift_button:hover {
-  background: #f4e92d;
+  background: #000;
+  color: #fff;
 }
 
 /* HERO */
@@ -143,9 +144,11 @@
   text-decoration: none;
 }
 
-/* When I hover over the "Shop now" button it changes from black to a dark gray, showing interaction */
+/* On hover the black button turns white with black text and a thin outline */
 .shop_now_button:hover {
-  background: #292929;
+  background: #fff;
+  color: #000;
+  box-shadow: inset 0 0 0 1px #000;
 }
 
 /* BUTTON ANIMATION: smooth colour change, arrow slides right on hover */
@@ -153,7 +156,7 @@
 /* This makes the background color of both buttons fade smoothly over 0.3 seconds on hover instead of switching instantly. */
 .choose_gift_button,
 .shop_now_button {
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* This makes the arrows in both buttons move smoothly instead of jumping when they shift on hover */
@@ -251,6 +254,7 @@
 
   /* This is the big title "The Gift Guide" on the image in the mobile version, smaller than on desktop */
   .banner_header {
+    font-family: 'Jost', sans-serif; 
     font-size: 30px;
     margin: 0 0 16px;
   }
