@@ -1,0 +1,580 @@
+{% comment %}
+  Gift Grid section
+  - Heading + 6 product tiles (3 columns on desktop, 2 on mobile)
+  - Each tile is a block with a product picker and a "+" hotspot position
+  - Clicking "+" opens a native <dialog> popup with the product details
+  - Popup behaviour lives in assets/gift-grid.js
+{% endcomment %}
+
+{{ 'https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Lustria&display=swap' | stylesheet_tag }}
+
+{% style %}
+  /* This is the whole section, holding the heading and the grid of all 6 products */
+  .products_grid {
+    padding: 80px 2%;
+    box-sizing: border-box;
+  }
+
+  /* This is the title on top of the grid, "Tisso vison in the wild" (centered on mobile) */
+  .grid_heading {
+    margin: 0 0 24px;
+    font-family: 'Lustria', Georgia, serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 120%;
+    color: #000;
+  }
+
+  /* This arranges the products in 3 equal columns on desktop (2 columns on mobile) */
+  .grid_columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* This is one product tile: a square box that holds the product image and the "+" icon on top of it (slightly taller on mobile) */
+  .grid_item {
+    position: relative; /* the "+" hotspot positions itself inside the tile */
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #eee;
+  }
+
+  /* This is the product image only, filling the whole tile and cropped (not stretched) to fit */
+  .grid_image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* This is the small white circle button with a "+" on top of the image. Clicking it opens the product popup, and its position is set from the Shopify editor (separately for desktop and mobile) */
+  .grid_plus_circle {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    transform: translate(-50%, -50%); /* centers the circle on its x/y point */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ---------- Product popup ---------- */
+
+  /* This is the popup box that opens when you press the "+" circle, holding the product image, details, options and the "Add to cart" button */
+  .product_popup {
+    width: 311px;
+    height: 447px;
+    max-width: calc(100vw - 32px);
+    padding: 16px;
+    box-sizing: border-box;
+    border: 0;
+    background: #fff;
+    color: #000;
+    font-family: 'Jost', sans-serif;
+  }
+
+  /* This is the popup when it is opened */
+  .product_popup[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* This removes the outline around the popup box when it opens */
+  .product_popup:focus {
+    outline: none;
+  }
+
+  /* This dims the page behind the popup when it opens */
+  .product_popup::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  /* This is the "×" button in the top right corner that closes the popup */
+  .popup_close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #000;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  /* This is the top of the popup that has the product image and the text next to it */
+  .popup_top_item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  /* This is the image in the popup only */
+  .popup_image {
+    flex-shrink: 0;
+    width: 120px;
+    height: 140px;
+    object-fit: cover;
+  }
+
+  /* This is the text only, next to the image in the popup */
+  .popup_text {
+    flex: 1;
+    min-width: 0;
+    height: 140px;
+    overflow: hidden;
+  }
+
+  /* This is the product name only, in the popup */
+  .popup_title {
+    margin: 0 0 4px;
+    padding-right: 20px; /* keeps long titles clear of the close button */
+    font-family: 'Lustria', Georgia, serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  /* This is the price of the product in the popup */
+  .popup_price {
+    margin: 0 0 6px;
+    font-family: 'Lustria', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  /* This is the short product description in the popup, under the price. It is cut after 4 lines so it never runs past the image */
+  .popup_description {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* This is the bottom part of the popup that has the size and color options and the button */
+  .popup_form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  /* This is one of the options, like color or size, separately */
+  .popup_option {
+    margin-bottom: 12px;
+  }
+
+  /* This pushes the color section above the size section to match the Figma design */
+  .popup_option_color {
+    order: -1;
+  }
+
+  /* This is the label for each section, like "Color" or "Size" */
+  .popup_option_label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+  }
+
+  /* This holds all the color options */
+  .popup_color_swatches {
+    display: flex;
+  }
+
+  /* This is just one color in the color options */
+  .popup_color_swatch {
+    position: relative;
+    flex: 1;
+    cursor: pointer;
+  }
+
+  /* This is the hidden radio input inside each color option. You never see it, it just remembers which color is picked, and the visible box next to it works as the button */
+  .popup_swatch_input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* This shows the color name inside a rectangle */
+  .popup_swatch_span {
+    position: relative; /* anchors the color bar below */
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 0 0 18px;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    font-size: 16px;
+  }
+
+  /* This is the small colored bar on the left of each color rectangle */
+  .popup_swatch_span::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 6px;
+    box-sizing: border-box;
+    background: var(--swatch, #000);
+    border-right: 1px solid #000;
+  }
+
+  /* This is how a color rectangle looks when it is picked: black box, white text */
+  .popup_swatch_input:checked + .popup_swatch_span {
+    background: #000;
+    color: #fff;
+  }
+
+  /* This shows an outline around a color rectangle when you move to it with the keyboard */
+  .popup_swatch_input:focus-visible + .popup_swatch_span {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+
+  /* This is the dropdown showing the size options */
+  .popup_size_dropdown {
+    width: 100%;
+    height: 50px;
+    padding: 0 52px 0 12px;
+    border: 1px solid #000;
+    border-radius: 0;
+    font: inherit;
+    font-size: 16px;
+    color: #000;
+    appearance: none;
+    -webkit-appearance: none;
+    /* divider line + custom chevron, as in the design */
+    background:
+      linear-gradient(#000, #000) right 44px top 0 / 1px 100% no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E") right 16px center no-repeat #fff;
+  }
+
+  /* This is the black "Add to cart" button at the bottom of the popup, with the arrow next to the text */
+  .popup_add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    height: 48px;
+    margin-top: auto; /* pins the button to the bottom of the popup */
+    padding: 0 20px;
+    border: 0;
+    background: #000;
+    color: #fff;
+    font: inherit;
+    font-size: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  /* This is the arrow in the button */
+  .popup_add_arrow {
+    flex-shrink: 0;
+  }
+
+   /* MOBILE VERSION STARTS HERE: everything below only applies to screens 600px wide or smaller */
+
+  @media screen and (max-width: 600px) {
+    /* This is the whole section holding the heading and the grid, with less space around it in the mobile version */
+    .products_grid {
+      padding: 40px 16px;
+    }
+
+    /* This is the "+" circle on each tile. In the mobile version it uses its own position, set separately in the Shopify editor */
+    .grid_plus_circle {
+      left: var(--x-m);
+      top: var(--y-m);
+    }
+
+    /* This is the title on top of the grid in the mobile version, centered and with less space below it than on desktop */
+    .grid_heading {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* This arranges the products in 2 columns instead of 3 in the mobile version, with a smaller gap between them */
+    .grid_columns {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+    }
+
+    /* This is one product tile in the mobile version, slightly taller than on desktop */
+    .grid_item {
+      aspect-ratio: 0.91 / 1;
+    }
+
+    /* POPUP (measured from the Figma mobile frame) */
+
+    /* This is the popup box in the mobile version, with no outer padding because each part inside sets its own spacing */
+    .product_popup {
+      padding: 0;
+    }
+
+    /* This is the "×" button in the mobile version, moved higher so it sits in its own row above the image */
+    .popup_close {
+      top: 10px;
+    }
+
+    /* This is the top of the popup in the mobile version, with the image starting 36px from the top and 17px from the left */
+    .popup_top_item {
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 36px 20px 0 17px;
+    }
+
+    /* This is the text next to the image in the mobile version, starting a bit lower than on desktop */
+    .popup_text {
+      box-sizing: border-box;
+      padding-top: 12px;
+    }
+
+    /* This is the product name in the mobile version, in light Jost inside a fixed two-line box so the price never moves */
+    .popup_title {
+      height: 40px;
+      margin: 0;
+      padding-right: 0;
+      overflow: hidden;
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 20px;
+    }
+
+    /* This is the price in the mobile version, with more space below it than on desktop */
+    .popup_price {
+      margin: 0 0 13px;
+      line-height: 20px;
+    }
+
+    /* This is the short description in the mobile version, lighter and tighter than on desktop */
+    .popup_description {
+      font-weight: 300;
+      line-height: 13px;
+    }
+
+    /* This is the bottom part of the popup in the mobile version, inset 20px on both sides and 25px from the bottom */
+    .popup_form {
+      padding: 0 20px 25px;
+    }
+
+    /* This is the label for each section ("Color" or "Size") in the mobile version, slightly bigger with more space below */
+    .popup_option_label {
+      margin-bottom: 10px;
+      font-size: 13px;
+      line-height: 16px;
+    }
+
+    /* This is each option (color or size) in the mobile version, with more space under it than on desktop */
+    .popup_option {
+      margin-bottom: 16px;
+    }
+
+    /* This is the color rectangle in the mobile version, shorter than on desktop */
+    .popup_swatch_span {
+      height: 40px;
+    }
+
+    /* This is the size dropdown in the mobile version, 40px tall with a 54px arrow cell on the right */
+    .popup_size_dropdown {
+      height: 40px;
+      padding: 0 54px 0 13px;
+      background:
+        linear-gradient(#000, #000) right 54px top 0 / 1px 100% no-repeat,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E") right 21px center no-repeat #fff;
+    }
+
+    /* This is the black "Add to cart" button in the mobile version, 45px tall, with the label and arrow sitting slightly right of center as in the design */
+    .popup_add {
+      height: 45px;
+      gap: 31px;
+      padding: 0 0 0 48px;
+    }
+
+    /* This is the arrow inside the "Add to cart" button in the mobile version, with a set width */
+    .popup_add_arrow {
+      width: 35px;
+      height: auto;
+    }
+  }
+{% endstyle %}
+
+<section class="products_grid">
+  <h2 class="grid_heading">{{ section.settings.heading }}</h2>
+
+  <div class="grid_columns">
+    {%- for block in section.blocks -%}
+      {%- assign product = block.settings.product -%}
+      {%- assign popup_id = 'gift-popup-' | append: block.id -%}
+
+      {%- comment -%} {{ block.shopify_attributes }} lets the theme editor select this tile {%- endcomment -%}
+      <div class="grid_item" {{ block.shopify_attributes }}>
+        {%- if product != blank and product.featured_image != blank -%}
+          <img
+            class="grid_image"
+            src="{{ product.featured_image | image_url: width: 700 }}"
+            alt="{{ product.featured_image.alt | default: product.title | escape }}"
+            loading="lazy"
+          >
+
+          {%- comment -%} "+" hotspot: opens the popup with the matching id {%- endcomment -%}
+          <button
+            type="button"
+            class="grid_plus_circle"
+            data-popup-target="{{ popup_id }}"
+            style="--x: {{ block.settings.hotspot_x }}%; --y: {{ block.settings.hotspot_y }}%; --x-m: {{ block.settings.hotspot_x_mobile }}%; --y-m: {{ block.settings.hotspot_y_mobile }}%;"
+            aria-label="View {{ product.title | escape }}"
+          >+</button>
+
+          {%- comment -%} Popup: all product info is rendered from the product object {%- endcomment -%}
+          <dialog class="product_popup" id="{{ popup_id }}" tabindex="-1" aria-label="{{ product.title | escape }}">
+            <button type="button" class="popup_close" data-popup-close aria-label="Close">&times;</button>
+
+            <div class="popup_top_item">
+              <img
+                class="popup_image"
+                src="{{ product.featured_image | image_url: width: 300 }}"
+                alt="{{ product.featured_image.alt | default: product.title | escape }}"
+              >
+              <div class="popup_text">
+                <h3 class="popup_title">{{ product.title }}</h3>
+                <p class="popup_price">{{ product.selected_or_first_available_variant.price | money }}</p>
+                <p class="popup_description">{{ product.description | strip_html | truncate: 140 }}</p>
+              </div>
+            </div>
+
+            <div class="popup_form" data-product-form>
+              {%- comment -%} One block per product option (Color, Size, ...): variants come from the product {%- endcomment -%}
+              {%- for option in product.options_with_values -%}
+                {%- assign option_name = option.name | downcase -%}
+
+                <div class="popup_option{% if option_name == 'color' %} popup_option_color{% endif %}">
+                  <span class="popup_option_label">{{ option.name }}</span>
+
+                  {%- if option_name == 'color' -%}
+                    <div class="popup_color_swatches">
+                      {%- for value in option.values -%}
+                        {%- comment -%}
+                          Bar color for each color name, and the display order (White always first).
+                          Unknown names fall back to the name itself, used as a CSS color.
+                          No color is preselected, as in the design.
+                        {%- endcomment -%}
+                        {%- assign value_key = value | downcase | strip -%}
+                        {%- assign swatch_order = 0 -%}
+                        {%- case value_key -%}
+                          {%- when 'white' -%}
+                            {%- assign swatch_color = '#ffffff' -%}
+                            {%- assign swatch_order = -1 -%}
+                          {%- when 'black' -%}
+                            {%- assign swatch_color = '#000000' -%}
+                          {%- when 'blue' -%}
+                            {%- assign swatch_color = '#1f3c88' -%}
+                          {%- when 'red' -%}
+                            {%- assign swatch_color = '#b3263e' -%}
+                          {%- when 'grey' or 'gray' -%}
+                            {%- assign swatch_color = '#9a9a9a' -%}
+                          {%- when 'green' -%}
+                            {%- assign swatch_color = '#2e6b3a' -%}
+                          {%- else -%}
+                            {%- assign swatch_color = value_key | replace: ' ', '' -%}
+                        {%- endcase -%}
+
+                        <label class="popup_color_swatch" style="--swatch: {{ swatch_color }}; order: {{ swatch_order }};">
+                          <input
+                            class="popup_swatch_input"
+                            type="radio"
+                            name="option{{ option.position }}-{{ block.id }}"
+                            value="{{ value | escape }}"
+                          >
+                          <span class="popup_swatch_span">{{ value }}</span>
+                        </label>
+                      {%- endfor -%}
+                    </div>
+                  {%- else -%}
+                    {%- comment -%} "required" blocks add-to-cart until a value is chosen {%- endcomment -%}
+                    <select class="popup_size_dropdown" name="option{{ option.position }}-{{ block.id }}" required>
+                      <option value="" disabled selected>Choose your {{ option_name }}</option>
+                      {%- for value in option.values -%}
+                        <option value="{{ value | escape }}">{{ value }}</option>
+                      {%- endfor -%}
+                    </select>
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+
+              {%- comment -%} All variants as JSON, used by the JS to find the chosen variant {%- endcomment -%}
+              <script type="application/json" data-variants>{{ product.variants | json }}</script>
+
+              <button type="button" class="popup_add" data-add-to-cart>
+                <span>Add to cart</span>
+                <svg class="popup_add_arrow" width="40" height="10" viewBox="0 0 40 10" fill="none" aria-hidden="true">
+                  <path d="M0 5h38M34 1l4 4-4 4" stroke="currentColor" stroke-width="1.2"/>
+                </svg>
+              </button>
+            </div>
+          </dialog>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script src="{{ 'gift-grid.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Gift Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Tisso vison in the wild"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_tile",
+      "name": "Product tile",
+      "limit": 6,
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "range", "id": "hotspot_x", "label": "Hotspot position (left)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "range", "id": "hotspot_y", "label": "Hotspot position (top)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "range", "id": "hotspot_x_mobile", "label": "Hotspot position, mobile (left)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 64 },
+        { "type": "range", "id": "hotspot_y_mobile", "label": "Hotspot position, mobile (top)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 14 }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Gift Grid",
+      "blocks": [
+        { "type": "product_tile" },
+        { "type": "product_tile" },
+        { "type": "product_tile" },
+        { "type": "product_tile" },
+        { "type": "product_tile" },
+        { "type": "product_tile" }
+      ]
+    }
+  ]
+}
+{% endschema %}

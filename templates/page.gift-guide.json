@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "gift-banner": {
+      "type": "gift-banner",
+      "settings": {}
+    },
+    "gift-grid": {
+      "type": "gift-grid",
+      "blocks": {
+        "tile-1": { "type": "product_tile", "settings": { "product": "black-leather-bag", "hotspot_x": 62, "hotspot_y": 56 } },
+        "tile-2": { "type": "product_tile", "settings": { "product": "blue-silk-tuxedo", "hotspot_x": 85, "hotspot_y": 53 } },
+        "tile-3": { "type": "product_tile", "settings": { "product": "chequered-red-shirt", "hotspot_x": 63, "hotspot_y": 20 } },
+        "tile-4": { "type": "product_tile", "settings": { "product": "classic-leather-jacket", "hotspot_x": 72, "hotspot_y": 18 } },
+        "tile-5": { "type": "product_tile", "settings": { "product": "classic-varsity-top", "hotspot_x": 52, "hotspot_y": 26 } },
+        "tile-6": { "type": "product_tile", "settings": { "product": "dark-denim-top", "hotspot_x": 76, "hotspot_y": 39 } }
+      },
+      "block_order": ["tile-1", "tile-2", "tile-3", "tile-4", "tile-5", "tile-6"],
+      "settings": {}
+    }
+  },
+  "order": ["gift-banner", "gift-grid"]
+}

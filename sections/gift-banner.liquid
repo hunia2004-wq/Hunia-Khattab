@@ -1,0 +1,430 @@
+{% comment %} This is to make Jost font available to be used across my file whenever needed, in two weights only: 400 (regular) and 500 (medium) {% endcomment %}
+{{ 'https://fonts.googleapis.com/css2?family=Jost:wght@400;500&display=swap' | stylesheet_tag }}
+{% style %}
+/* This is the big box that contains everything in the banner, including the gray bar at the top, the images, the buttons and the gray bar at the bottom */
+.banner {
+  font-family: 'Jost', sans-serif;
+  color: #000;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* HEADER */
+
+/* This is the bar above the image that contains the logo, the button and the "Find the ideal gift for your loved ones" text */
+.top_gray_bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 60px;
+  padding: 10px 50px;
+  background: #f4f4f4;
+}
+
+/* This is the logo in the gray area on the left */
+.banner_logo {
+  justify-self: start;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+/* This hides the hamburger menu from the desktop version as it only needs to appear in the mobile version */
+.hamburger_menu_banner {
+  display: none;
+}
+
+/* This is the css for each of the 3 lines of the hamburger menu: their width, thickness and color */
+.hamburger_menu_banner i {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #000;
+}
+
+/* This hides the mobile-only text (the short description and the short bottom strip text) from the desktop version */
+.banner_mobile {
+  display: none;
+}
+
+/* This is the alignment and font size of the text in the middle of the top gray bar "Find the ideal gift for your loved ones." */
+.middle_text_topbar {
+  justify-self: center;
+  font-size: 16px;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+/* This is the choose gift button placed on the right in the top gray bar only in the desktop version */
+.choose_gift_button {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 207px;
+  height: 44px;
+  background: #fff544;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* When I hover over the button it changes color to a deeper yellow showing interaction */
+.choose_gift_button:hover {
+  background: #f4e92d;
+}
+
+/* HERO */
+
+/* This is the whole section between the two gray bars, containing the image of the banner, the content, the buttons and everything on the image */
+.banner_section {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: 780px;
+  padding: 0 4.45%;
+  box-sizing: border-box;
+  background-color: #fff;
+  background-image: url('{{ "banner-desktop.png" | asset_url }}');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* TEXT CONTENT */
+
+/* An invisible box around the three text items, which keeps them together in one column. */
+.banner_content {
+  width: 100%;
+  max-width: 510px;
+  padding-bottom: 48px;
+}
+
+/* Only the big title, "The Gift Guide". */
+.banner_header {
+  margin: 0 0 46px;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 100%;
+  white-space: nowrap;
+}
+
+/* Only the small paragraph, "Discover Joy: Your Ultimate Holiday Gift Destination...". */
+.banner_description_text {
+  max-width: 483px;
+  margin: 0 0 48px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* SHOP BUTTON */
+
+/* This is the black "Shop now" button below the text on the banner image, with the label on the left and the arrow on the right */
+.shop_now_button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 220px;
+  height: 50px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  background: #000;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* When I hover over the "Shop now" button it changes from black to a dark gray, showing interaction */
+.shop_now_button:hover {
+  background: #292929;
+}
+
+/* BUTTON ANIMATION: smooth colour change, arrow slides right on hover */
+
+/* This makes the background color of both buttons fade smoothly over 0.3 seconds on hover instead of switching instantly. */
+.choose_gift_button,
+.shop_now_button {
+  transition: background-color 0.3s ease;
+}
+
+/* This makes the arrows in both buttons move smoothly instead of jumping when they shift on hover */
+.choose_gift_button svg,
+.shop_now_button svg {
+  transition: transform 0.3s ease;
+}
+
+/* This slides the arrow 6px to the right when I hover over either of the two buttons */
+.choose_gift_button:hover svg,
+.shop_now_button:hover svg {
+  transform: translateX(6px);
+}
+
+/* BOTTOM STRIP (sustainable, ethically made...) */
+
+/* This is the gray bar below the image that has "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL" (shorter text on mobile) */
+.bottom_gray_stripe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 10px 50px;
+  box-sizing: border-box;
+  background: #f4f4f4;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* MOBILE VERSION STARTS HERE: everything below only applies to screens 600px wide or smaller */
+
+@media screen and (max-width: 600px) {
+  /* Header: burger left, logo centered, no tagline and no "Choose gift" button */
+  .top_gray_bar {
+    height: 65px;
+    padding: 0 16px;
+  }
+
+  /* This is the hamburger menu that only appears in the mobile version, at the top left of the screen */
+  .hamburger_menu_banner {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-self: start;
+  }
+
+  /* This is the logo in the middle of the top bar in the mobile version, larger and bolder than on desktop */
+  .banner_logo {
+    justify-self: center;
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  /* This hides the "Choose gift" button (top right on desktop) from the mobile version */
+  .choose_gift_button {
+    display: none;
+  }
+
+  /* This hides the middle text "Find the ideal gift for your loved ones." from the top gray bar in the mobile version */
+  .middle_text_topbar {
+    display: none;
+  }
+
+  /* This hides the long desktop text (the full description and the full bottom strip text) from the mobile version */
+  .banner_desktop {
+    display: none;
+  }
+
+  /* This shows the shorter texts (the short description and the short bottom strip text) that are only used in the mobile version */
+  .banner_mobile {
+    display: inline;
+  }
+
+  /* This is the whole section containing the image, the text and the button, but for the mobile version. The --mobile-image-height variable stores the image height so the "Shop now" button can be positioned relative to it */
+  .banner_section {
+    --mobile-image-height: 70.4vw;
+    height: auto;
+    padding: 32px 20px var(--mobile-image-height);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-image: url('{{ "banner-mobile.png" | asset_url }}');
+    background-position: center bottom;
+    background-size: 100% auto;
+  }
+
+  /* This is the invisible box around the text on the image in the mobile version, taking the full width of the screen */
+  .banner_content {
+    max-width: 100%;
+    padding-bottom: 0;
+  }
+
+  /* This is the big title "The Gift Guide" on the image in the mobile version, smaller than on desktop */
+  .banner_header {
+    font-size: 30px;
+    margin: 0 0 16px;
+  }
+
+  /* This is the small description below the title in the mobile version, narrower and centered */
+  .banner_description_text {
+    max-width: 340px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 130%;
+  }
+
+  /* This is the black "Shop now" button on the image in the mobile version. It's smaller than on desktop and floats centered over the lower part of the illustration */
+  .shop_now_button {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--mobile-image-height) * 0.125);
+    transform: translateX(-50%);
+    width: 193px;
+    height: 45px;
+    line-height: 20.48px;
+    justify-content: center;
+    gap: 25px;
+  }
+
+  /* This is the gray strip below the image in the mobile version, with the shorter text "SUSTAINABLE, ETHICALLY MADE ACTIVEWEAR", smaller text and less padding than on desktop */
+  .bottom_gray_stripe {
+    font-size: 14px;
+    padding: 9px 12px;
+  }
+}
+
+/* REMOVE THE THEME HEADER AND FOOTER FOR THIS DESIGN */
+
+/* This hides the theme's own header and footer so that only the banner design shows. */
+.shopify-section-group-header-group,
+.shopify-section-group-footer-group {
+  display: none;
+}
+{% endstyle %}
+
+<section class="banner">
+
+  {%- comment -%} Top bar: burger (mobile only), logo, tagline, "Choose gift" button {%- endcomment -%}
+  <div class="top_gray_bar">
+    {%- comment -%} Hamburger icon, only visible on mobile {%- endcomment -%}
+    <span class="hamburger_menu_banner" aria-hidden="true"><i></i><i></i><i></i></span>
+
+    <span class="banner_logo">
+      {{ section.settings.logo_text }}
+    </span>
+
+    <span class="middle_text_topbar">
+      {{ section.settings.tagline }}
+    </span>
+
+    <a class="choose_gift_button" href="{{ section.settings.choose_link }}">
+      <span>{{ section.settings.choose_label }}</span>
+
+      <svg width="24" height="12" viewBox="0 0 24 12" fill="none" aria-hidden="true">
+        <path d="M0 6h22M17 1l5 5-5 5"
+          stroke="currentColor"
+          stroke-width="1.2"/>
+      </svg>
+    </a>
+  </div>
+
+  {%- comment -%} Hero: background illustration with heading, text and "Shop now" button {%- endcomment -%}
+  <div class="banner_section">
+    <div class="banner_content">
+
+      <h1 class="banner_header">
+        {{ section.settings.heading }}
+      </h1>
+
+      <p class="banner_description_text">
+        <span class="banner_desktop">{{ section.settings.description }}</span>
+        <span class="banner_mobile">{{ section.settings.description_mobile }}</span>
+      </p>
+
+      <a class="shop_now_button" href="{{ section.settings.shop_link }}">
+        <span>{{ section.settings.shop_label }}</span>
+
+        <svg width="24" height="10" viewBox="0 0 24 10" fill="none" aria-hidden="true">
+          <path d="M0 5h22M18 1l4 4-4 4"
+            stroke="currentColor"
+            stroke-width="1.2"/>
+        </svg>
+      </a>
+
+    </div>
+  </div>
+
+  {%- comment -%} Bottom strip (different text on mobile) {%- endcomment -%}
+  <div class="bottom_gray_stripe">
+    <span class="banner_desktop">{{ section.settings.strip_text }}</span>
+    <span class="banner_mobile">{{ section.settings.strip_text_mobile }}</span>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Gift Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "TISSO VISON"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Find the ideal gift for your loved ones."
+    },
+    {
+      "type": "text",
+      "id": "choose_label",
+      "label": "Choose gift label",
+      "default": "Choose gift"
+    },
+    {
+      "type": "url",
+      "id": "choose_link",
+      "label": "Choose gift link"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Gift Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
+    },
+    {
+      "type": "text",
+      "id": "description_mobile",
+      "label": "Description (mobile)",
+      "default": "Discover Joy: Your Ultimate Holiday Gift <br> Destination."
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop now label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop now link"
+    },
+    {
+      "type": "text",
+      "id": "strip_text",
+      "label": "Bottom strip text",
+      "default": "Sustainable, ethically made clothes in sizes XXS to 6XL"
+    },
+    {
+      "type": "text",
+      "id": "strip_text_mobile",
+      "label": "Bottom strip text (mobile)",
+      "default": "Sustainable, ethically made activewear"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Banner"
+    }
+  ]
+}
+{% endschema %}
