@@ -9,7 +9,7 @@
   window.giftGridLoaded = true;
 
   /* This is the handle (the end of the product link) of the free bonus product that gets added with Black + Medium. To change the bonus product, change it here */
-  var BONUS_HANDLE = 'soft-winter-jacket';
+  var BONUS_HANDLE = 'dark-winter-jacket';
 
   /* FUNCTION 1: reads what the customer picked in the popup (color, size...) and returns it as a list in the same order as the options, for example ['Black', 'M'] */
   function getSelectedOptions(form) {
