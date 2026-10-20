@@ -288,6 +288,30 @@
   .popup_add_arrow {
     flex-shrink: 0;
   }
+  /* Add to cart hover: the button inverts and the arrow slides right */
+.popup_add {
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.popup_add_arrow {
+  transition: transform 0.3s ease;
+}
+
+.popup_add:hover:not(:disabled) {
+  background: #fff;
+  color: #000;
+  box-shadow: inset 0 0 0 1px #000;
+}
+
+.popup_add:hover .popup_add_arrow {
+  transform: translateX(6px);
+}
+
+/* While adding, show a waiting cursor */
+.popup_add:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
 
    /* MOBILE VERSION STARTS HERE: everything below only applies to screens 600px wide or smaller */
 
